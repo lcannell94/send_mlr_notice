@@ -39,15 +39,26 @@ def resolve_recipient(name: str, email_domain: str) -> str:
     return f"{name}@{email_domain}"
 
 
-def build_message(from_addr: str, to_addr: str, subject: str, body: str) -> str:
-    return (
+def build_message(
+    from_addr: str,
+    to_addr: str,
+    subject: str,
+    body: str,
+    reply_to: str | None = None,
+) -> str:
+    headers = (
         f"To: {to_addr}\r\n"
         f"From: {from_addr}\r\n"
         f"Subject: {subject}\r\n"
-        "MIME-Version: 1.0\r\n"
-        "Content-Type: text/plain; charset=utf-8\r\n"
-        "\r\n"
-        f"{body}"
+    )
+    if reply_to:
+        headers += f"Reply-To: {reply_to}\r\n"
+    return (
+        headers
+        + "MIME-Version: 1.0\r\n"
+        + "Content-Type: text/plain; charset=utf-8\r\n"
+        + "\r\n"
+        + f"{body}"
     )
 
 
@@ -113,12 +124,14 @@ def main() -> int:
     subject = str(config["subject"])
     sendmail = str(config["sendmail"])
     email_domain = str(config.get("email_domain", ""))
+    reply_to = config.get("reply_to")
+    reply_to = str(reply_to).strip() if reply_to else None
 
     failures = 0
     for name in names:
         try:
             recipient = resolve_recipient(name, email_domain)
-            message = build_message(from_addr, recipient, subject, body)
+            message = build_message(from_addr, recipient, subject, body, reply_to)
             if args.dry_run:
                 print(f"[dry-run] would send to {recipient}")
                 continue
