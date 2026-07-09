@@ -1,3 +1,2 @@
-alice
-bob@example.com
-carol
+larry@cannell.org
+lcannell@gmail.com
