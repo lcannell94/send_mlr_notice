@@ -1,0 +1,6 @@
+Hello,
+
+This is a sample notice message.
+
+Regards,
+MLR Notice
