@@ -76,13 +76,17 @@ def main() -> int:
         description="Send individual emails to names listed in a file via sendmail."
     )
     parser.add_argument(
-        "names_file",
+        "-n",
+        "--names-file",
         type=Path,
+        required=True,
         help="File with one recipient name or email address per line",
     )
     parser.add_argument(
-        "message_file",
+        "-m",
+        "--message-file",
         type=Path,
+        required=True,
         help="File containing the email message body",
     )
     parser.add_argument(
@@ -93,7 +97,7 @@ def main() -> int:
         help="YAML config file (default: config.ini)",
     )
     parser.add_argument(
-        "-n",
+        "-d",
         "--dry-run",
         action="store_true",
         help="Print recipients and message preview without sending",
